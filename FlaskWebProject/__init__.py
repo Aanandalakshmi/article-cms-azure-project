@@ -17,7 +17,7 @@ app.config.from_object(Config)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # TODO: Add any logging levels and handlers with app.logger
-# DONE (Note: Instructor's original app.logger code not pylint compliant)
+# DONE (Note: Instructor's original app.logger code not pylint compliant).
 LOG = create_logger(app)
 LOG.setLevel(logging.INFO)
 streamHandler = logging.StreamHandler()
