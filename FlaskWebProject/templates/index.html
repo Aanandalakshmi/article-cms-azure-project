@@ -20,7 +20,7 @@
                 <th scope="row">{{ post.id }} </th>
                 <td>{{ post.title }}</td>
                 <td>{{ post.author }}</td>
-                <td>{{ post.image_path != None }}</td>
+                <td>{{ "Yes" if post.image_path else "No" }}</td>
                 <td><a href="{{ url_for('post', id=post.id) }}">Edit Post</a></td>
             </tr>
             {% endfor %}
