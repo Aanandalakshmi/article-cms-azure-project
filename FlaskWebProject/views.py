@@ -10,9 +10,10 @@ from FlaskWebProject import app, db
 from FlaskWebProject.forms import LoginForm, PostForm
 from flask_login import current_user, login_user, logout_user, login_required
 from FlaskWebProject.models import User, Post
-from FlaskWebProject import LOG # LOG import
+from FlaskWebProject import LOG
 import msal
 import uuid
+import os # Import the os module
 
 imageSourceUrl = 'https://' + app.config['BLOB_ACCOUNT'] + '.blob.core.windows.net/' + app.config['BLOB_CONTAINER'] + '/'
 
@@ -22,6 +23,14 @@ imageSourceUrl = 'https://' + app.config['BLOB_ACCOUNT'] + '.blob.core.windows.n
 def home():
     user = User.query.filter_by(username=current_user.username).first_or_404()
     posts = Post.query.all()
+    # Iterate through posts to handle the 'image' field before passing to the template
+    for post in posts:
+        # If the image field is not a boolean (meaning it's a URL or path), set has_image to True
+        if isinstance(post.image, str) and post.image:
+            post.has_image = "True"
+        else:
+            post.has_image = "False"
+
     return render_template(
         'index.html',
         title='Home Page',
@@ -34,7 +43,9 @@ def new_post():
     form = PostForm(request.form)
     if form.validate_on_submit():
         post = Post()
-        post.save_changes(form, request.files['image_path'], current_user.id, new=True)
+        # Ensure the image data is provided by the form, then pass it to save_changes
+        image_file = request.files['image_path'] if 'image_path' in request.files else None
+        post.save_changes(form, image_file, current_user.id, new=True)
         # LOG Informational
         LOG.info('INFO: New post added by user: ' + str(current_user.id))
         return redirect(url_for('home'))
@@ -52,10 +63,10 @@ def post(id):
     post = Post.query.get(int(id))
     form = PostForm(formdata=request.form, obj=post)
     if form.validate_on_submit():
-        post.save_changes(form, request.files['image_path'], current_user.id)
+        image_file = request.files['image_path'] if 'image_path' in request.files else None
+        post.save_changes(form, image_file, current_user.id)
         # LOG Informational
         LOG.info('INFO: Post ' + str(id) + ' edited by user: ' + str(current_user.id))
-        return redirect(url_for('home'))
     return render_template(
         'post.html',
         title='Edit Post',
