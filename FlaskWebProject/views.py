@@ -64,7 +64,8 @@ def post(id):
         'post.html',
         title='Edit Post',
         imageSource=imageSourceUrl,
-        form=form
+        form=form,
+        post=post
     )
 
 @app.route('/login', methods=['GET', 'POST'])
