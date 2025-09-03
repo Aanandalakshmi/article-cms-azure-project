@@ -11,7 +11,7 @@ Flask==2.3.2
 Flask-Login>=0.6.0
 Flask-Session==0.4.0
 Flask-SQLAlchemy==2.5.1
-Flask-WTF==0.14.3
+Flask-WTF>=0.15.0  # <--- CHANGED THIS LINE
 idna==2.8
 itsdangerous>=2.1.2
 Jinja2>=3.1.2
