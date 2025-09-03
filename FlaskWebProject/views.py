@@ -105,6 +105,7 @@ def authorized():
             request.args['code'],
             scopes=Config.SCOPE,
             redirect_uri=url_for('authorized', _external=True))
+            state=request.args['state'])
         if "error" in result:
             #LOG Error
             LOG.error('ERROR: Did not acquire a token for OAUTH...')
