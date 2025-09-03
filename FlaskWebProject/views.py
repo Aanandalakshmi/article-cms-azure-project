@@ -23,14 +23,7 @@ imageSourceUrl = 'https://' + app.config['BLOB_ACCOUNT'] + '.blob.core.windows.n
 def home():
     user = User.query.filter_by(username=current_user.username).first_or_404()
     posts = Post.query.all()
-    # Iterate through posts to handle the 'image' field before passing to the template
-    for post in posts:
-        # If the image field is not a boolean (meaning it's a URL or path), set has_image to True
-        if isinstance(post.image, str) and post.image:
-            post.has_image = "True"
-        else:
-            post.has_image = "False"
-
+    
     return render_template(
         'index.html',
         title='Home Page',
